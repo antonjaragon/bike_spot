@@ -7,23 +7,66 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'store.dart';
+import 'trains.dart';
+import 'package:timezone/data/latest.dart' as tzdata;
 
-void main() => runApp(const BikeSpotApp());
+void main() {
+  tzdata.initializeTimeZones();
+  runApp(const BikeSpotApp());
+}
 
 class BikeSpotApp extends StatelessWidget {
   const BikeSpotApp({super.key});
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        title: 'Bike Spot',
+        title: 'Leuven Conmute',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF184D3D)),
           scaffoldBackgroundColor: const Color(0xFFF6F5EF),
         ),
-        home: const ParkingPage(),
+        home: const CommutePages(),
       );
+}
+
+class CommutePages extends StatefulWidget {
+  const CommutePages({super.key});
+  @override
+  State<CommutePages> createState() => _CommutePagesState();
+}
+class _CommutePagesState extends State<CommutePages> {
+  final _pages = PageController();
+  int _index = 0;
+  @override
+  void dispose() { _pages.dispose(); super.dispose(); }
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    body: PageView(
+      controller: _pages,
+      onPageChanged: (index) => setState(() => _index = index),
+      children: const [ParkingPage(), TrainsPage()],
+    ),
+    bottomNavigationBar: NavigationBar(
+      selectedIndex: _index,
+      onDestinationSelected: (index) => _pages.animateToPage(index,
+        duration: const Duration(milliseconds: 250), curve: Curves.easeOut),
+      destinations: const [
+        NavigationDestination(icon: Icon(Icons.pedal_bike), label: 'Bike'),
+        NavigationDestination(icon: Icon(Icons.train_outlined), label: 'Trains'),
+      ],
+    ),
+  );
+}
+class TrainsPage extends StatelessWidget {
+  const TrainsPage({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Trains')),
+    body: const SafeArea(child: SingleChildScrollView(
+      padding: EdgeInsets.all(16), child: TrainPanel())),
+  );
 }
 
 class ParkingPage extends StatefulWidget {
@@ -33,7 +76,9 @@ class ParkingPage extends StatefulWidget {
   State<ParkingPage> createState() => _ParkingPageState();
 }
 
-class _ParkingPageState extends State<ParkingPage> {
+class _ParkingPageState extends State<ParkingPage> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
   ParkingStore? _store;
   List<Parking> _items = [];
   Parking? _saved;
@@ -206,9 +251,11 @@ class _ParkingPageState extends State<ParkingPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) {
+    super.build(context);
+    return Scaffold(
         appBar: AppBar(
-          title: const Text('Bike Spot'),
+          title: const Text('Leuven Conmute'),
           backgroundColor: Colors.transparent,
         ),
         body: SafeArea(
@@ -230,6 +277,7 @@ class _ParkingPageState extends State<ParkingPage> {
                         child: ListView(
                           padding: const EdgeInsets.all(24),
                           children: [
+
                             const Icon(Icons.pedal_bike,
                                 size: 72, color: Color(0xFF184D3D)),
                             const SizedBox(height: 16),
@@ -330,7 +378,7 @@ class _ParkingPageState extends State<ParkingPage> {
                             ],
                             const SizedBox(height: 12),
                             Text(
-                              _dirty ? 'Changes not saved yet' : 'Works offline · Stored on your phone',
+                              _dirty ? 'Changes not saved yet' : 'Parking saved on your phone · Trains need internet',
                               textAlign: TextAlign.center,
                               style: const TextStyle(fontSize: 12, color: Colors.black54),
                             ),
@@ -340,4 +388,5 @@ class _ParkingPageState extends State<ParkingPage> {
                     ),
         ),
       );
+  }
 }
