@@ -1,4 +1,4 @@
-# Leuven Conmute — parking + trains
+# Leuven Commute — parking + trains
 
 ## Updating your existing app
 Copy `lib/`, `assets/`, `test/`, `tool/setup.py`, and `pubspec.yaml` from this
@@ -28,7 +28,7 @@ For iPhone, configure Xcode signing and run on a physical phone to test the came
 ## Two screens and following a journey
 The app always starts on Bike. Swipe left to Trains, or tap the bottom tabs.
 Swipe right to return. Parking drafts and the selected train survive page changes.
-The app's visible name is **Leuven Conmute**; the internal package/application IDs
+The app's visible name is **Leuven Commute**; the internal package/application IDs
 stay unchanged so updating the app preserves saved parking data.
 
 Train cards show scheduled times, expected times for delayed services, reported

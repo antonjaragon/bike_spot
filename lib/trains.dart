@@ -167,7 +167,7 @@ class _TrainPanelState extends State<TrainPanel> with WidgetsBindingObserver, Au
     try {
       final payload = await (() async {
         final request = await client.getUrl(uri);
-        request.headers.set(HttpHeaders.userAgentHeader, 'LeuvenConmute/1.2 (personal commute app)');
+        request.headers.set(HttpHeaders.userAgentHeader, 'LeuvenCommute/1.2 (personal commute app)');
         request.headers.set(HttpHeaders.acceptHeader, 'application/json');
         final response = await request.close();
         final cacheSeconds = int.tryParse(RegExp(r'max-age=(\d+)')

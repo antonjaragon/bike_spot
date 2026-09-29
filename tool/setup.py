@@ -22,13 +22,13 @@ if not (root / 'android').exists() or not (root / 'ios').exists():
 info = root / 'ios/Runner/Info.plist'
 with info.open('rb') as f:
     data = plistlib.load(f)
-data.update(CFBundleDisplayName='Leuven Conmute',
+data.update(CFBundleDisplayName='Leuven Commute',
             NSCameraUsageDescription='Take a photo to remember where you parked your bike.',
             NSPhotoLibraryUsageDescription='Choose a photo of your bike parking spot.')
 with info.open('wb') as f:
     plistlib.dump(data, f, sort_keys=False)
 manifest = root / 'android/app/src/main/AndroidManifest.xml'
-manifest_text = manifest.read_text().replace('android:label="bike_spot"', 'android:label="Leuven Conmute"').replace('android:label="Bike Spot"', 'android:label="Leuven Conmute"')
+manifest_text = manifest.read_text().replace('android:label="bike_spot"', 'android:label="Leuven Commute"').replace('android:label="Bike Spot"', 'android:label="Leuven Commute"')
 if 'android.permission.INTERNET' not in manifest_text:
     # Add to the main manifest so release builds also have network access.
     start = manifest_text.index('>', manifest_text.index('<manifest')) + 1

@@ -20,7 +20,7 @@ class BikeSpotApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        title: 'Leuven Conmute',
+        title: 'Leuven Commute',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,
@@ -255,7 +255,7 @@ class _ParkingPageState extends State<ParkingPage> with AutomaticKeepAliveClient
     super.build(context);
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Leuven Conmute'),
+          title: const Text('Leuven Commute'),
           backgroundColor: Colors.transparent,
         ),
         body: SafeArea(
