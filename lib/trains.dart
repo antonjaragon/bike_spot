@@ -435,12 +435,10 @@ class JourneyTimeline extends StatelessWidget {
 
   Widget _transfer(Leg arriving, Leg next) {
     final wait = next.departs.difference(arriving.arrives).inMinutes;
-    return Padding(padding: const EdgeInsets.only(left: 4, bottom: 6), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(arriving.toName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-      Text('Arrive · ${platformLabel(arriving.to)}', style: TextStyle(fontSize: 13, color: platformChanged(arriving.to) ? redInk : Colors.black54)),
-      Text('Transfer time $wait min', style: TextStyle(fontSize: 13, color: wait < 4 ? redInk : Colors.black54)),
-      Text('Depart ${clock(next.departs)} · ${platformLabel(next.from)}', style: TextStyle(fontSize: 13, color: platformChanged(next.from) ? redInk : Colors.black54)),
-    ]));
+    return Padding(padding: const EdgeInsets.fromLTRB(4, 4, 0, 12),
+      child: Text(wait < 0 ? 'Connection at risk · departure before arrival'
+          : 'Change trains · $wait min',
+        style: TextStyle(fontSize: 13, color: wait < 4 ? redInk : Colors.black54)));
   }
 
   Widget _legInfo(Leg leg) {
@@ -466,7 +464,13 @@ class JourneyTimeline extends StatelessWidget {
       final leg = legs[i];
       rows.add(_row(time: const SizedBox.shrink(), body: _legInfo(leg), dot: false));
       if (i < legs.length - 1) {
-        rows.add(_row(time: _time(leg.to), body: _transfer(leg, legs[i + 1])));
+        final next = legs[i + 1];
+        rows.add(_row(time: _time(leg.to),
+          body: _stop('${leg.toName} · Arrive on ${serviceName(leg.from)}', leg.to)));
+        rows.add(_row(time: const SizedBox.shrink(), body: _transfer(leg, next), dot: false));
+        rows.add(_row(time: _time(next.from),
+          body: _stop('${next.fromName} · Depart on ${serviceName(next.from)}', next.from)));
+
       } else {
         rows.add(_row(time: _time(leg.to), body: _stop(leg.toName, leg.to), line: false));
       }

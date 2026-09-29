@@ -18,12 +18,13 @@ void main() {
     expect(clock(DateTime.utc(2026, 3, 29, 1)), '03:00');
     expect(clock(DateTime.utc(2026, 10, 25, 1)), '02:00');
   });
+  // Explicit nested types match decoded JSON and allow numeric/string API values.
   Map<String, dynamic> fixture() => {
-    'departure': {'time': '1790582400', 'delay': '180', 'left': '0', 'canceled': '0'},
-    'arrival': {'time': 1790586000, 'delay': 300, 'canceled': 0},
-    'vias': {'via': [{'station': 'Brussel-Noord',
-      'arrival': {'time': '1790584000', 'canceled': '0'},
-      'departure': {'time': '1790584300', 'canceled': '1'}}]},
+    'departure': <String, dynamic>{'time': '1790582400', 'delay': '180', 'left': '0', 'canceled': '0'},
+    'arrival': <String, dynamic>{'time': 1790586000, 'delay': 300, 'canceled': 0},
+    'vias': <String, dynamic>{'via': <Map<String, dynamic>>[{'station': 'Brussel-Noord',
+      'arrival': <String, dynamic>{'time': '1790584000', 'canceled': '0'},
+      'departure': <String, dynamic>{'time': '1790584300', 'canceled': '1'}}]},
   };
   test('delays accept string and number fields; cancellation includes transfers', () {
     final j = Journey.fromJson(fixture());
